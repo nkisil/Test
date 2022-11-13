@@ -10,5 +10,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<flow name="someappFlow" doc:id="0481043a-4009-4383-9fce-ee695f37dafa" >
 		<http:listener doc:name="Listener" doc:id="a1484b9a-88b2-48c6-95bb-4468e99359ac" config-ref="HTTP_Listener_config" path="/"/>
 		<logger level="INFO" doc:name="Logger" doc:id="63e78887-9da6-437e-ac9b-f38097457a4d" />
+		<logger level="INFO" doc:name="Logger1" doc:id="c5c55902-ea77-490a-99f4-be24f0f72b7a" />
 	</flow>
 </mule>
