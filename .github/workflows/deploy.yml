@@ -112,4 +112,14 @@ jobs:
         run: cat  $GITHUB_WORKSPACE/pom.xml
         
       - name: Build with Maven
-        run: mvn --batch-mode package deploy -f $GITHUB_WORKSPACE/pom.xml -DmuleDeploy –Dtarget.type=server -Dtarget=vmdmulesrv4 -Denvironment=Development4 -Dapp.runtime=4.4.0-20220622 -DconnectedAppClientId=${{ secrets.SS_MULE_CLIENTID }} -DconnectedAppClientSecret=${{ secrets.SS_MULE_CLIENTSECRET }} -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1
+        run: mvn --batch-mode package deploy -f $GITHUB_WORKSPACE/pom.xml -DmuleDeploy 
+        env:
+          target.type: server
+          target: vmdmulesrv4
+          environment: Development4
+          app.runtime: 4.4.0-20220622
+          connectedAppClientId: ${{ secrets.SS_MULE_CLIENTID }}
+          connectedAppClientSecret: ${{ secrets.SS_MULE_CLIENTSECRET }}
+          version.major: 1
+          version.minor: 1
+          version.patch: 1
