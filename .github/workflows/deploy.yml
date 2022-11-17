@@ -85,6 +85,9 @@ jobs:
               }
             ]
             
+      - name: print   
+        run: echo $GITHUB_WORKSPACE   
+        
       - name: Add deploy options
         uses: Mudlet/xmlstarlet-action@master
         with:
