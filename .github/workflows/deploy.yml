@@ -1,0 +1,98 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: maven-settings-temporary
+        # You may pin to the exact commit or the version.
+        # uses: InstaCode/maven-settings-xml-action@b33c5169f7bcd56b69dcdcd874a55084d43010da
+        uses: InstaCode/maven-settings-xml-action@v9
+        with:
+          servers: |
+            [
+             {
+               "id": "MuleRepository",
+               "username": "${{ secrets.SS_MAVEN_USER }}",
+               "password": "${{ secrets.SS_MAVEN_PASS }}"
+             }
+            ]
+          repositories: |
+            [
+              {
+                "id": "MuleRepository",
+                "name": "MuleRepository",
+                "url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/",
+                "releases": {
+                  "enabled": "true"
+                },
+                "snapshots": {
+                  "enabled": "true"
+                }
+              },
+               {
+                "id": "mulesoft-releases",
+                "name": "MuleSoft Repository",
+                "url": "http://repository.mulesoft.org/releases/",
+                "releases": {
+                  "enabled": "true"
+                },
+                "snapshots": {
+                  "enabled": "false"
+                }
+              },
+               {
+                "id": "mulesoft-snapshots",
+                "name": "MuleSoft Snapshot Repository",
+                "url": "http://repository.mulesoft.org/snapshots/",
+                "releases": {
+                  "enabled": "false"
+                },
+                "snapshots": {
+                  "enabled": "true"
+                }
+              },
+               {
+                "id": "mulesoft-public",
+                "name": "MuleSoft Public Repository",
+                "url": "https://repository.mulesoft.org/nexus/content/repositories/public/",
+                "releases": {
+                  "enabled": "true"
+                },
+                "snapshots": {
+                  "enabled": "true"
+                }
+              }
+            ]
+            
+      - name: Setup Java 1.8.x
+        uses: actions/setup-java@v1
+        with:
+          java-version: '1.8.x'
+          
+      - name: Add deploy options
+        run: xmlstarlet ed  -S -L -s //_:plugins -t elem -n "plugin" -v "<groupId>org.mule.tools.maven</groupId><artifactId>mule-maven-plugin</artifactId><version>3.7.1</version><extensions>true</extensions><configuration><armDeployment><muleVersion>${app.runtime}</muleVersion><uri>https://anypoint.mulesoft.com</uri><target>${target}</target><targetType>${target.type}</targetType><connectedAppClientId>${connectedAppClientId}</connectedAppClientId><connectedAppClientSecret>${connectedAppClientSecret}</connectedAppClientSecret><connectedAppGrantType>client_credentials</connectedAppGrantType><environment>${environment}</environment></armDeployment></configuration>" $GITHUB_WORKSPACE/pom.xml
+      - name: verify  
+        run: cat  $GITHUB_WORKSPACE/pom.xml
+      - name: Build with Maven
+        run: mvn --batch-mode clean package deploy -DmuleDeploy –Dtarget.type=server -Dtarget=vmdmulesrv4 -Denvironment=Development4 -Dapp.runtime=4.4.0-20220622 -DconnectedAppClientId=${{ secrets.SS_MULE_CLIENTID }} -DconnectedAppClientSecret=${{ secrets.SS_MULE_CLIENTSECRET }} -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1
