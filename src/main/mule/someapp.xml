@@ -14,5 +14,9 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<logger level="INFO" doc:name="Logger2" doc:id="b3970a01-800c-43c6-a136-a4e2ce6b3a5d" />
 		<logger level="INFO" doc:name="Logger3" doc:id="2055de24-e65a-4165-9957-30ad63af42d2" />
 		<set-payload value="Im Here!" doc:name="Set Payload" doc:id="de1cd0b5-a3a5-429d-a17d-17fe0d4d1ff0" />
+		<flow-ref doc:name="Flow Reference" doc:id="ec84df40-5f07-4b57-99ac-f8e638e6c5ee" name="someappSub_Flow"/>
 	</flow>
+	<sub-flow name="someappSub_Flow" doc:id="2a8da314-038b-4c6a-b281-2b290db0d14e" >
+		<set-payload value="Nope!" doc:name="Set Payload" doc:id="3b5e6b13-6b47-49c6-af6d-5edbda0b8d0e" />
+	</sub-flow>
 </mule>
