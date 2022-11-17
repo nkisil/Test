@@ -4,7 +4,7 @@
 
 	<groupId>com.mycompany</groupId>
 	<artifactId>someapp</artifactId>
-	<version>${version.major}.${version.minor}.${version.patch}</version>
+	<version>SNAPSHOT-1.0.0</version>
 	<packaging>mule-application</packaging>
 
 	<name>demo-app</name>
@@ -32,24 +32,6 @@
 				<configuration>
 					<classifier>mule-application</classifier>
 				</configuration>
-			</plugin>
-			<plugin>
-			  <groupId>org.mule.tools.maven</groupId>
-			  <artifactId>mule-maven-plugin</artifactId>
-			  <version>3.7.1</version>
-			  <extensions>true</extensions>
-			  <configuration>
-			    <armDeployment>
-			      <muleVersion>${app.runtime}</muleVersion>
-			      <uri>https://anypoint.mulesoft.com</uri>
-			      <target>${target}</target>
-			      <targetType>${target.type}</targetType>
-			      <connectedAppClientId>${connectedAppClientId}</connectedAppClientId>
-			      <connectedAppClientSecret>${connectedAppClientSecret}</connectedAppClientSecret>
-			      <connectedAppGrantType>client_credentials</connectedAppGrantType>      
-			      <environment>${environment}</environment>
-			    </armDeployment>
-			  </configuration>
 			</plugin>
 		</plugins>
 	</build>
