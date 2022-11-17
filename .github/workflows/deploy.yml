@@ -91,7 +91,16 @@ jobs:
           java-version: '1.8.x'
           
       - name: Add deploy options
-        run: xmlstarlet ed  -S -L -s //_:plugins -t elem -n "plugin" -v "<groupId>org.mule.tools.maven</groupId><artifactId>mule-maven-plugin</artifactId><version>3.7.1</version><extensions>true</extensions><configuration><armDeployment><muleVersion>${app.runtime}</muleVersion><uri>https://anypoint.mulesoft.com</uri><target>${target}</target><targetType>${target.type}</targetType><connectedAppClientId>${connectedAppClientId}</connectedAppClientId><connectedAppClientSecret>${connectedAppClientSecret}</connectedAppClientSecret><connectedAppGrantType>client_credentials</connectedAppGrantType><environment>${environment}</environment></armDeployment></configuration>" $GITHUB_WORKSPACE/pom.xml
+        run: xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0  -d  "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:classifier" $GITHUB_WORKSPACE/pom.xml 
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration" -t elem -n armDeployment -v "" $GITHUB_WORKSPACE/pom.xml
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n muleVersion -v "${app.runtime}" $GITHUB_WORKSPACE/pom.xml
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n uri -v "https://anypoint.mulesoft.com" $GITHUB_WORKSPACE/pom.xml 
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n target -v "${target}" $GITHUB_WORKSPACE/pom.xml
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n targetType -v "${target.type}" $GITHUB_WORKSPACE/pom.xml 
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n connectedAppClientId -v "${connectedAppClientId}" $GITHUB_WORKSPACE/pom.xml 
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n connectedAppClientSecret -v "${connectedAppClientSecret}" $GITHUB_WORKSPACE/pom.xml
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n connectedAppGrantType -v "client_credentials" $GITHUB_WORKSPACE/pom.xml
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n environment -v "${environment}" $GITHUB_WORKSPACE/pom.xml 
       - name: verify  
         run: cat  $GITHUB_WORKSPACE/pom.xml
       - name: Build with Maven
