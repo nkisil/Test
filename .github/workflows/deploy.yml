@@ -85,11 +85,6 @@ jobs:
               }
             ]
             
-      - name: Setup Java 1.8.x
-        uses: actions/setup-java@v1
-        with:
-          java-version: '1.8.x'
-          
       - name: Add deploy options
         run: |
             xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0  -d  "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:classifier" $GITHUB_WORKSPACE/pom.xml 
@@ -101,7 +96,14 @@ jobs:
             xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n connectedAppClientId -v "${connectedAppClientId}" $GITHUB_WORKSPACE/pom.xml 
             xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n connectedAppClientSecret -v "${connectedAppClientSecret}" $GITHUB_WORKSPACE/pom.xml
             xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n connectedAppGrantType -v "client_credentials" $GITHUB_WORKSPACE/pom.xml
-            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n environment -v "${environment}" $GITHUB_WORKSPACE/pom.xml 
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n environment -v "${environment}" $GITHUB_WORKSPACE/pom.xml        
+            
+      - name: Setup Java 1.8.x
+        uses: actions/setup-java@v1
+        with:
+          java-version: '1.8.x'
+          
+      
       - name: verify  
         run: cat  $GITHUB_WORKSPACE/pom.xml
       - name: Build with Maven
