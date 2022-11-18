@@ -58,7 +58,7 @@ jobs:
           java-version: '1.8.x'
           
       - name: Add repo credentials
-        uses: s4u/maven-settings-action@v2.8.0
+        uses: s4u/maven-settings-action@v2.4.1
         with:
           servers: |
              [{
