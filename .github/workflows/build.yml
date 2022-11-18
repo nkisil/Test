@@ -114,7 +114,7 @@ jobs:
          echo $CLIENTID
          echo $CLIENTSECRET
          cat $GITHUB_WORKSPACE/pom.xml
-         mvn deploy -DmuleDeploy --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1 -Dmule.artifact="$artifactName"
+         mvn deploy -DmuleDeploy --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1 -Dmule.artifact="$artifactName" \
           -Dtarget.type="server" \
           -Dtarget="vmdmulesrv4" \
           -Denvironment="Development4" \
