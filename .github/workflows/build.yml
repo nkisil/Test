@@ -67,6 +67,7 @@ jobs:
                "password": "${{ secrets.SS_MAVEN_PASS }}"
              }]
 
+
       - name: Print effective maven settings   
         run: mvn help:effective-settings
         
