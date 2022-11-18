@@ -113,17 +113,7 @@ jobs:
          echo $artifactName
          echo $CLIENTID
          echo $CLIENTSECRET
-         mvn deploy -DmuleDeploy -e \
-          -Dmule.artifact=$artifactName \          
-          –Dtarget.type="server" \
-          -Dtarget="vmdmulesrv4" \
-          -Denvironment="Development4" \
-          -Dapp.runtime="4.4.0-20220622" \
-          -DconnectedAppClientId="$CLIENTID" \
-          -DconnectedAppClientSecret="$CLIENTSECRET" \
-          -Dversion.major=1 \
-          -Dversion.minor=1 \
-          -Dversion.patch=1
+         mvn deploy -DmuleDeploy -Dmule.artifact=$artifactName –Dtarget.type="server" -Dtarget="vmdmulesrv4" -Denvironment="Development4" -Dapp.runtime="4.4.0-20220622" -DconnectedAppClientId="$CLIENTID" -DconnectedAppClientSecret="$CLIENTSECRET" -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1
     
             
             
