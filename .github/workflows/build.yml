@@ -24,10 +24,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-            
-      - name: print   
-        run: echo $GITHUB_WORKSPACE   
         
       - name: Configure Maven Deploy Settings
         run: |
@@ -80,5 +76,44 @@ jobs:
         with:
           name: artifacts
           path: target/*.jar
+    
+  deploy:
+    needs: build
+    runs-on: ubuntu-lastest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        
+      - name: Maven Cache
+        uses: actions/cache@v3.0.11
+        with:
+          path: /.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: | 
+            ${{ runner.os }}-maven-
+              
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.1
+        with:
+          name: artifacts
+          
+      - name: Deploy to SandBox
+        env: 
+          CLIENTID: ${{ secrets.SS_CLIENT_ID }}
+          CLIENTSECRET: ${{ secrets.SS_CLIENT_SECRET }}
+        run: |
+         artifactName=$(ls *.jar | head -1)
+         mvn deploy -DmuleDeploy -e \
+          -Dmule.artifact=$artifactName \          
+          –Dtarget.type="server" \
+          -Dtarget="vmdmulesrv4" \
+          -Denvironment="Development4" \
+          -Dapp.runtime="4.4.0-20220622" \
+          -DconnectedAppClientId="$CLIENTID" \
+          -DconnectedAppClientSecret="$SS_CLIENT_SECRET" \
+          -Dversion.major=1 \
+          -Dversion.minor=1 \
+          -Dversion.patch=1
+    
             
             
