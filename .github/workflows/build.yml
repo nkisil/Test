@@ -68,9 +68,43 @@ jobs:
           name: artifacts
           path: target/*.jar
     
-    
-  deploy:
+  test:
+    # The type of runner that the job will run on
     needs: build
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        
+      - name: Maven Cache
+        uses: actions/cache@v3.0.11
+        with:
+          path: /.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: | 
+            ${{ runner.os }}-maven-
+            
+      - name: Setup Java 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: '1.8.x'
+ 
+      - name: Configure Versioning in Pom
+        run: |
+            sudo apt install xmlstarlet -y
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -u "/pom:project/pom:version" -v '${version.major}.${version.minor}.${version.patch}' $GITHUB_WORKSPACE/pom.xml
+      
+      - name: Test
+        env: 
+          CLIENTID: ${{ secrets.SS_CLIENT_ID }}
+          CLIENTSECRET: ${{ secrets.SS_CLIENT_SECRET }}
+        run: |         
+         echo "mvn clean test" 
+
+  deploy:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
