@@ -49,10 +49,8 @@ jobs:
         with:
           java-version: '1.8.x'
           
-      - name: maven-settings-temporary
-        # You may pin to the exact commit or the version.
-        # uses: InstaCode/maven-settings-xml-action@b33c5169f7bcd56b69dcdcd874a55084d43010da
-        uses: InstaCode/maven-settings-xml-action@v9
+      - name: Add repo credentials
+        uses: s4u/maven-settings-actions@2.4.0
         with:
           servers: |
             [
@@ -62,59 +60,11 @@ jobs:
                "password": "${{ secrets.SS_MAVEN_PASS }}"
              }
             ]
-          repositories: |
-            [
-              {
-                "id": "MuleRepository",
-                "name": "MuleRepository",
-                "url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/",
-                "releases": {
-                  "enabled": "true"
-                },
-                "snapshots": {
-                  "enabled": "true"
-                }
-              },
-               {
-                "id": "mulesoft-releases",
-                "name": "MuleSoft Repository",
-                "url": "http://repository.mulesoft.org/releases/",
-                "releases": {
-                  "enabled": "true"
-                },
-                "snapshots": {
-                  "enabled": "false"
-                }
-              },
-               {
-                "id": "mulesoft-snapshots",
-                "name": "MuleSoft Snapshot Repository",
-                "url": "http://repository.mulesoft.org/snapshots/",
-                "releases": {
-                  "enabled": "false"
-                },
-                "snapshots": {
-                  "enabled": "true"
-                }
-              },
-               {
-                "id": "mulesoft-public",
-                "name": "MuleSoft Public Repository",
-                "url": "https://repository.mulesoft.org/nexus/content/repositories/public/",
-                "releases": {
-                  "enabled": "true"
-                },
-                "snapshots": {
-                  "enabled": "true"
-                }
-              }
-            ]   
-            
-      - name: verify  
-        run: cat  $GITHUB_WORKSPACE/pom.xml
+
+      - name: Print effective maven settings   
+        run: mvn help:effective-settings
         
       - name: Build with Maven
         run: mvn clean package --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1
        
-      - name: Deploy with Maven
-        run: mvn --batch-mode package deploy -f $GITHUB_WORKSPACE/pom.xml -DmuleDeploy –D"MULEtargetType"="server" -Dtarget="vmdmulesrv4" -Denvironment="Development4" -D"app.runtime"="4.4.0-20220622" -DconnectedAppClientId=${{ secrets.SS_MULE_CLIENTID }} -DconnectedAppClientSecret=${{ secrets.SS_MULE_CLIENTSECRET }} -D"version.major"="1" -D"version.minor"="1" -D"version.patch"="1"
+    
