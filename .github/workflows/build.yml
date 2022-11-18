@@ -45,7 +45,7 @@ jobs:
             xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -s "/pom:project/pom:build/pom:plugins/pom:plugin[pom:artifactId='mule-maven-plugin']/pom:configuration/pom:armDeployment" -t elem -n environment -v '${environment}' $GITHUB_WORKSPACE/pom.xml 
    
       - name: Maven Cache
-        uses: actions/cache@1
+        uses: actions/cache@v3.0.11
         with:
           path: /.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
