@@ -67,7 +67,7 @@ jobs:
             xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -u "/pom:project/pom:version" -v '${version.major}.${version.minor}.${version.patch}' $GITHUB_WORKSPACE/pom.xml
             
       - name: Build with Maven
-        run: mvn clean package --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1
+        run: mvn clean package --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=$major -Dversion.minor=$minor -Dversion.patch=$patch
 
 
       - name: Upload a Build Artifact
@@ -153,7 +153,7 @@ jobs:
           CLIENTSECRET: ${{ secrets.SS_CLIENT_SECRET }}
         run: |         
          artifactName=$(ls *.jar | head -1)
-         echo "mvn deploy -DmuleDeploy -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1 -Dmule.artifact=$artifactName -Dtarget.type=server -Dtarget=$mulesrv -Denvironment=$muleenv -Dapp.runtime=$muleversion -DconnectedAppClientId=$CLIENTID -DconnectedAppClientSecret=$CLIENTSECRET -DskipTests=true"
+         echo "mvn deploy -DmuleDeploy -Dversion.major=$major -Dversion.minor=$minor -Dversion.patch=$patch -Dmule.artifact=$artifactName -Dtarget.type=server -Dtarget=$mulesrv -Denvironment=$muleenv -Dapp.runtime=$muleversion -DconnectedAppClientId=$CLIENTID -DconnectedAppClientSecret=$CLIENTSECRET -DskipTests=true"
          cat $GITHUB_WORKSPACE/pom.xml
-         mvn deploy -DmuleDeploy --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1 -Dmule.artifact=$artifactName -Dtarget.type=server -Dtarget=$mulesrv -Denvironment=$muleenv -Dapp.runtime="$muleversion" -DconnectedAppClientId="$CLIENTID" -DconnectedAppClientSecret="$CLIENTSECRET" -DskipTests=true
+         mvn deploy -DmuleDeploy --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=$major -Dversion.minor=$minor -Dversion.patch=$patch -Dmule.artifact=$artifactName -Dtarget.type=server -Dtarget=$mulesrv -Denvironment=$muleenv -Dapp.runtime="$muleversion" -DconnectedAppClientId="$CLIENTID" -DconnectedAppClientSecret="$CLIENTSECRET" -DskipTests=true
  
