@@ -51,7 +51,13 @@ jobs:
 
       - name: Print effective maven settings   
         run: mvn help:effective-settings
-        
+ 
+ 
+      - name: Configure Versioning in Pom
+        run: |
+            sudo apt install xmlstarlet -y
+            xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -u "/pom:project/pom:version" -v '${version.major}.${version.minor}.${version.patch}' $GITHUB_WORKSPACE/pom.xml
+            
       - name: Build with Maven
         run: mvn clean package --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1
 
