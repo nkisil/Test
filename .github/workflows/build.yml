@@ -1,7 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 
 name: CI
-
+  
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
@@ -24,7 +24,19 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-        
+
+      - name: Process version of the tag
+        id: version
+        uses: ncipollo/semantic-version-action@v1
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps.version.outputs) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump previous tag
+        env:
+          PREVIOUS_TAG: ${{ steps.version.outputs.previous_tag }}
+        run: echo "$PREVIOUS_TAG"
+
       - name: Maven Cache
         uses: actions/cache@v3.0.11
         with:
