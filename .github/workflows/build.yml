@@ -1,6 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
 name: CI
+
+env:
+ major: 1
+ minor: ${{github.run_number}}
+ patch: 0
   
 # Controls when the workflow will run
 on:
@@ -24,19 +29,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-      - name: Process version of the tag
-        id: version
-        uses: ncipollo/semantic-version-action@v1
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps.version.outputs) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump previous tag
-        env:
-          PREVIOUS_TAG: ${{ steps.version.outputs.previous_tag }}
-        run: echo "$PREVIOUS_TAG"
-
+      
       - name: Maven Cache
         uses: actions/cache@v3.0.11
         with:
@@ -71,7 +64,7 @@ jobs:
             xmlstarlet ed -L -N pom=http://maven.apache.org/POM/4.0.0 -u "/pom:project/pom:version" -v '${version.major}.${version.minor}.${version.patch}' $GITHUB_WORKSPACE/pom.xml
             
       - name: Build with Maven
-        run: mvn clean package --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1
+        run: mvn clean package --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=$major -Dversion.minor=$minor -Dversion.patch=$patch
 
 
       - name: Upload a Build Artifact
@@ -159,5 +152,5 @@ jobs:
          artifactName=$(ls *.jar | head -1)
          echo "mvn deploy -DmuleDeploy -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1 -Dmule.artifact=$artifactName -Dtarget.type=server -Dtarget=vmdmulesrv4 -Denvironment=Development4 -Dapp.runtime=4.4.0-20220622 -DconnectedAppClientId=$CLIENTID -DconnectedAppClientSecret=$CLIENTSECRET -DskipTests=true"
          cat $GITHUB_WORKSPACE/pom.xml
-         mvn deploy -DmuleDeploy --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=1 -Dversion.minor=1 -Dversion.patch=1 -Dmule.artifact=$artifactName -Dtarget.type=server -Dtarget=vmdmulesrv4 -Denvironment=Development4 -Dapp.runtime="4.4.0-20220622" -DconnectedAppClientId="$CLIENTID" -DconnectedAppClientSecret="$CLIENTSECRET" -DskipTests=true
+         mvn deploy -DmuleDeploy --batch-mode -f $GITHUB_WORKSPACE/pom.xml -Dversion.major=$major -Dversion.minor=$minor -Dversion.patch=$patch -Dmule.artifact=$artifactName -Dtarget.type=server -Dtarget=vmdmulesrv4 -Denvironment=Development4 -Dapp.runtime="4.4.0-20220622" -DconnectedAppClientId="$CLIENTID" -DconnectedAppClientSecret="$CLIENTSECRET" -DskipTests=true
  
