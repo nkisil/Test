@@ -104,6 +104,9 @@ jobs:
           CLIENTSECRET: ${{ secrets.SS_CLIENT_SECRET }}
         run: |
          artifactName=$(ls *.jar | head -1)
+         echo $artifactName
+         echo $CLIENTID
+         echo $SS_CLIENT_SECRET
          mvn deploy -DmuleDeploy -e \
           -Dmule.artifact=$artifactName \          
           –Dtarget.type="server" \
