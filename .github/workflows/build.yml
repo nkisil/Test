@@ -61,7 +61,7 @@ jobs:
         uses: s4u/maven-settings-action@v2.8.0
         with:
           servers: |
-            [{
+             [{
                "id": "mule-enterprise",
                "username": "${{ secrets.SS_MAVEN_USER }}",
                "password": "${{ secrets.SS_MAVEN_PASS }}"
